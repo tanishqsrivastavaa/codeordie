@@ -31,8 +31,8 @@ function App() {
     setMessages((msgs) => [...msgs, { sender: 'user', text: userMessage }]);
 
     try {
-      console.log('Sending request to /chat endpoint...');
-      const response = await fetch('/chat', {
+      console.log('Sending request to /api/chat endpoint...');
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

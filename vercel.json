@@ -2,16 +2,19 @@
   "version": 2,
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
+  "functions": {
+    "api.py": {
+      "runtime": "@vercel/python@3.0.0"
+    }
+  },
   "routes": [
     {
       "src": "/chat",
-      "dest": "/api.py",
-      "methods": ["POST", "OPTIONS"]
+      "dest": "/api.py"
     },
     {
       "src": "/",
-      "dest": "/api.py",
-      "methods": ["GET"]
+      "dest": "/api.py"
     },
     {
       "handle": "filesystem"
