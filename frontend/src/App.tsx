@@ -44,9 +44,9 @@ function App() {
       console.log('Response status:', response.status);
       
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => null);
+        console.error('Error response:', errorData);
+        throw new Error(errorData?.detail || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -59,9 +59,21 @@ function App() {
       setMessages((msgs) => [...msgs, { sender: 'broski', text: data.response }]);
     } catch (error) {
       console.error('Error details:', error);
+      let errorMessage = 'Sorry, something went wrong. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('GROQ_API_KEY')) {
+          errorMessage = 'API key is not configured. Please check the server configuration.';
+        } else if (error.message.includes('No response from agent')) {
+          errorMessage = 'The AI agent is not responding. Please try again.';
+        } else {
+          errorMessage = `Error: ${error.message}`;
+        }
+      }
+      
       setMessages((msgs) => [...msgs, { 
         sender: 'broski', 
-        text: 'Sorry, something went wrong. Please try again.' 
+        text: errorMessage
       }]);
     } finally {
       setIsLoading(false);

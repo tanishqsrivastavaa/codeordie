@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from agno.agent import Agent
@@ -7,13 +7,23 @@ from agno.tools.google_maps import GoogleMapTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 import os
 from dotenv import load_dotenv
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-agent = Agent(
-    model=Groq(id="llama-3.3-70b-versatile", api_key=GROQ_API_KEY),
-    description="""You are broski, a nonchalant yet insightful AI assistant who's part navigator, part therapist. You have a laid-back attitude but are surprisingly perceptive about people's needs and emotions. You have two powerful tools at your disposal:
+if not GROQ_API_KEY:
+    logger.error("GROQ_API_KEY environment variable is not set!")
+    raise ValueError("GROQ_API_KEY environment variable is not set!")
+
+try:
+    agent = Agent(
+        model=Groq(id="llama-3.3-70b-versatile", api_key=GROQ_API_KEY),
+        description="""You are broski, a nonchalant yet insightful AI assistant who's part navigator, part therapist. You have a laid-back attitude but are surprisingly perceptive about people's needs and emotions. You have two powerful tools at your disposal:
 
 1. Google Maps Tools: Use this when users need:
    - Directions between locations
@@ -67,10 +77,13 @@ Always:
 - Stay within token limits while maintaining helpfulness
 
 Remember: You're not just giving directions - you're helping people navigate both physically and emotionally through their journey. Keep it cool, keep it real, and keep it helpful - but keep it concise!""",
-    tools=[GoogleMapTools, DuckDuckGoTools()],
-    show_tool_calls=True,
-    markdown=False
-)
+        tools=[GoogleMapTools, DuckDuckGoTools()],
+        show_tool_calls=True,
+        markdown=False
+    )
+except Exception as e:
+    logger.error(f"Error initializing agent: {str(e)}")
+    raise
 
 app = FastAPI()
 
@@ -92,14 +105,19 @@ class ChatResponse(BaseModel):
 @app.post("/chat", response_model=ChatResponse)
 async def chat_endpoint(req: ChatRequest):
     try:
+        logger.info(f"Received message: {req.message}")
         response = agent.run(req.message)
+        logger.info(f"Agent response: {response}")
+        
         # Ensure response is a string
         if response is None:
-            response = "I apologize, but I couldn't generate a response at this time."
+            logger.error("Agent returned None response")
+            raise HTTPException(status_code=500, detail="No response from agent")
+            
         return {"response": str(response.content)}
     except Exception as e:
-        print(f"Error in chat endpoint: {str(e)}")
-        return {"response": "I apologize, but I encountered an error while processing your request."}
+        logger.error(f"Error in chat endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Add a health check endpoint
 @app.get("/")
