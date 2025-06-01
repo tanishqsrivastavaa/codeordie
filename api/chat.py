@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from agno.agent import Agent
 from agno.models.groq import Groq
-from agno.tools.google_maps import GoogleMapTools
 from agno.tools.duckduckgo import DuckDuckGoTools
 import os
 from dotenv import load_dotenv
