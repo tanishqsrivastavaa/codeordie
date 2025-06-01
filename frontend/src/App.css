@@ -1,0 +1,163 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.terminal-container {
+  background: #181818;
+  color: #e0e0e0;
+  max-width: 600px;
+  margin: 40px auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px #000a;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  border: 1px solid #333;
+  position: relative;
+}
+
+.logo-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #181818;
+  border-bottom: 1px solid #333;
+}
+
+.logo-container {
+  padding: 16px;
+  background: #181818;
+  text-align: left;
+}
+
+.logo-text {
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  font-size: 1.5rem;
+  color: #e0e0e0;
+  margin-bottom: 4px;
+}
+
+.logo-bracket {
+  color: #666;
+}
+
+.logo-name {
+  color: #ffe6a7;
+  font-weight: bold;
+  margin: 0 4px;
+}
+
+.logo-subtitle {
+  font-family: 'Fira Mono', 'Consolas', monospace;
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+}
+
+.terminal-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 16px 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.terminal-message {
+  padding: 6px 12px;
+  border-radius: 4px;
+  max-width: 90%;
+  word-break: break-word;
+  font-size: 1rem;
+}
+
+.terminal-message.user {
+  align-self: flex-end;
+  background: #232323;
+  color: #aee7ff;
+}
+
+.terminal-message.broski {
+  align-self: flex-start;
+  background: #232323;
+  color: #ffe6a7;
+}
+
+.sender {
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.terminal-input-bar {
+  display: flex;
+  border-top: 1px solid #333;
+  padding: 10px 12px;
+  background: #181818;
+}
+
+.terminal-input-bar input {
+  flex: 1;
+  background: #232323;
+  color: #e0e0e0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.terminal-input-bar button {
+  margin-left: 8px;
+  background: #333;
+  color: #e0e0e0;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.terminal-input-bar button:hover {
+  background: #444;
+}
