@@ -4,14 +4,14 @@
   "outputDirectory": "frontend/dist",
   "builds": [
     {
-      "src": "api.py",
+      "src": "api/api.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/chat",
-      "dest": "api.py"
+      "dest": "api/api.py"
     },
     {
       "handle": "filesystem"
