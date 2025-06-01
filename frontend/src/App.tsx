@@ -22,40 +22,49 @@ function App() {
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    
+
+    const userMessage = input.trim();
+    setInput('');
     setIsLoading(true);
-    setMessages((msgs) => [...msgs, { sender: 'user', text: input }]);
     
+    // Add user message immediately
+    setMessages((msgs) => [...msgs, { sender: 'user', text: userMessage }]);
+
     try {
-      console.log('Sending request to /chat...');
+      console.log('Sending request to /chat endpoint...');
       const response = await fetch('/chat', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: userMessage }),
       });
-      
+
       console.log('Response status:', response.status);
+      
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error response:', errorText);
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const data = await response.json();
       console.log('Response data:', data);
+
+      if (!data.response) {
+        throw new Error('No response data received');
+      }
+
       setMessages((msgs) => [...msgs, { sender: 'broski', text: data.response }]);
     } catch (error) {
       console.error('Error details:', error);
       setMessages((msgs) => [...msgs, { 
         sender: 'broski', 
-        text: `Sorry, something went wrong. Error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+        text: 'Sorry, something went wrong. Please try again.' 
       }]);
     } finally {
       setIsLoading(false);
-      setInput('');
     }
   };
 

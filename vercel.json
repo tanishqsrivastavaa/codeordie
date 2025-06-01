@@ -5,7 +5,13 @@
   "routes": [
     {
       "src": "/chat",
-      "dest": "api/api.py"
+      "dest": "/api.py",
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "src": "/",
+      "dest": "/api.py",
+      "methods": ["GET"]
     },
     {
       "handle": "filesystem"
