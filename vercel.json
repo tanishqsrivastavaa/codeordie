@@ -2,7 +2,7 @@
   "version": 2,
   "routes": [
     {
-      "src": "/chat",
+      "src": "/api/chat",
       "dest": "api/api.py"
     },
     {
