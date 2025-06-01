@@ -90,16 +90,20 @@ class ChatResponse(BaseModel):
     response: str
 
 @app.post("/chat", response_model=ChatResponse)
-def chat_endpoint(req: ChatRequest):
+async def chat_endpoint(req: ChatRequest):
     try:
-        response = agent.run(req.message)
+        response = await agent.run(req.message)
         # Ensure response is a string
         if response is None:
             response = "I apologize, but I couldn't generate a response at this time."
         return {"response": str(response.content)}
     except Exception as e:
         print(f"Error in chat endpoint: {str(e)}")
-        return {"response": "I apologize, but I encountered an error while processing your request."}
+        return {"response": f"I apologize, but I encountered an error: {str(e)}"}
 
+# For local development
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 #;)

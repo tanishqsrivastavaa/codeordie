@@ -12,6 +12,7 @@ function App() {
     { sender: 'broski', text: "hey, how can I help you today?" },
   ]);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -20,24 +21,42 @@ function App() {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
+    
+    setIsLoading(true);
     setMessages((msgs) => [...msgs, { sender: 'user', text: input }]);
+    
     try {
+      console.log('Sending request to /chat...');
       const response = await fetch('/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({ message: input }),
       });
+      
+      console.log('Response status:', response.status);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
+      
       const data = await response.json();
+      console.log('Response data:', data);
       setMessages((msgs) => [...msgs, { sender: 'broski', text: data.response }]);
     } catch (error) {
-      console.error('Error:', error);
-      setMessages((msgs) => [...msgs, { sender: 'broski', text: 'Sorry, something went wrong.' }]);
+      console.error('Error details:', error);
+      setMessages((msgs) => [...msgs, { 
+        sender: 'broski', 
+        text: `Sorry, something went wrong. Error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      }]);
+    } finally {
+      setIsLoading(false);
+      setInput('');
     }
-    setInput('');
   };
 
   return (
@@ -58,10 +77,13 @@ function App() {
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder="Type your message..."
+          placeholder={isLoading ? "Broski is thinking..." : "Type your message..."}
+          disabled={isLoading}
           autoFocus
         />
-        <button type="submit">Send</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "..." : "Send"}
+        </button>
       </form>
     </div>
   );
