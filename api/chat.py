@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from agno.agent import Agent
@@ -102,8 +102,8 @@ async def chat_endpoint(req: ChatRequest):
         return {"response": f"I apologize, but I encountered an error: {str(e)}"}
 
 # For Vercel serverless functions
-def handler(request):
-    return app(request)
+async def handler(request: Request):
+    return await app(request)
 
 # For local development
 if __name__ == "__main__":
