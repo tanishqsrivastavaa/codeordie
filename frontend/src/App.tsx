@@ -23,11 +23,14 @@ function App() {
     if (!input.trim()) return;
     setMessages((msgs) => [...msgs, { sender: 'user', text: input }]);
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),
       });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setMessages((msgs) => [...msgs, { sender: 'broski', text: data.response }]);
     } catch (error) {
