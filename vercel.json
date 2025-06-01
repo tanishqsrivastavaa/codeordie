@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/api.py": {
+      "runtime": "@vercel/python@3.0.0"
+    }
+  },
   "routes": [
     {
       "src": "/chat",

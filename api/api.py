@@ -101,6 +101,10 @@ async def chat_endpoint(req: ChatRequest):
         print(f"Error in chat endpoint: {str(e)}")
         return {"response": f"I apologize, but I encountered an error: {str(e)}"}
 
+# For Vercel serverless functions
+def handler(request):
+    return app(request)
+
 # For local development
 if __name__ == "__main__":
     import uvicorn
