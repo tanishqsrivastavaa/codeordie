@@ -6,10 +6,13 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: 'esnext',
+    outDir: 'dist',
+    assetsDir: 'assets',
   },
   optimizeDeps: {
     esbuildOptions: {
       target: 'esnext',
     },
   },
+  base: '/',
 })
